@@ -1,0 +1,23 @@
+{
+    "name": "tsquare/scriptxtractor",
+    "version": "0.1.0",
+    "description": "A package that allows the use of inline JavaScript in Blade Templates on WordPress, without just spitting them out right in place, by parsing the templates, compiling scripts, and automatically enqueueing with the appropriate parameters.",
+    "keywords": ["wp", "blade", "wordpress", "inline", "scripts", "templates"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Trevor Thompson",
+            "email": "trevor@trevomail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": "^7.1",
+        "jenssegers/blade": "^1.2.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Tsquare\\ScriptXtractor\\": "src/"
+        }
+    }
+}
