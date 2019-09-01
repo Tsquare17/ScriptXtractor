@@ -112,7 +112,7 @@ class Script_Xtractor {
 	 * @return array|void $blocks Array of js template blocks.
 	 */
 	public function parse_template( $template ) {
-		preg_match_all( '/({{-- beginjs.*?endjs --}})/ims', $template, $blocks );
+		preg_match_all( '/(?:{{-- beginjs.*?endjs --}})/ims', $template, $blocks );
 
 		if ( [] !== array_filter( $blocks ) ) {
 			return array_flatten( $blocks );
