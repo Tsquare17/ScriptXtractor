@@ -1,5 +1,5 @@
 # Tsquare\ScriptXtractor
-A package that allows the use of inline JavaScript in Blade Templates on WordPress, without just spitting them out right in place.
+A package that allows the use of JavaScript in Blade Templates on WordPress, without inlining.
 
 ScriptXtractor allows you to work with component specific scripts right in your template, without inlining your scripts, by parsing the specified templates path, compiling discovered scripts, and enqueueing them as specified in the template.
 
@@ -17,3 +17,7 @@ ScriptXtractor allows you to work with component specific scripts right in your 
     let foo = 'bar';
 {{-- endjs --}}
 ```
+
+### Considerations
+
+At the moment, the major drawback to this method is that we can't exclude scripts from compilation, based on conditions in the template. **ALL** of the scripts in the templates will be compiled.
