@@ -81,7 +81,7 @@ class Script_Xtractor {
 	 *
 	 * @param array $files An array of files to be loaded and parsed.
 	 */
-	public function load_all( $files ): void {
+	public function load( $files ): void {
 		$blocks = [];
 		foreach ( $files as $file ) {
 			$template = file_get_contents( $file );
@@ -92,16 +92,6 @@ class Script_Xtractor {
 			}
 		}
 		$this->blocks = array_flatten( $blocks );
-	}
-
-	/**
-	 * Load a template file to be parsed.
-	 *
-	 * @param string $file The template file to load.
-	 */
-	public function load_template( $file ): void {
-		$template     = file_get_contents( $file );
-		$this->blocks = $this->parse_template( $template );
 	}
 
 	/**
@@ -123,7 +113,11 @@ class Script_Xtractor {
 	 * Get the parameters and the contents of the blocks, send them off to be compiled, and generate json enqueue config in the SC_ASSETS_PATH.
 	 */
 	public function process_blocks() {
-
+		foreach ( $this->blocks as $block ) {
+			$block_params = $this->extract_params( $block );
+			$block_script = $this->extract_script( $block );
+			$this->generate_script( $block_params, $block_script );
+		}
 	}
 
 	/**
@@ -136,16 +130,36 @@ class Script_Xtractor {
 	public function extract_params( $block ): array {
 		preg_match_all( '/{{-- beginjs.+?--}}/im', $block, $matches );
 
-		return $matches;
+		$match_string = array_flatten( $matches )[0];
+		$match_array  = explode( ':', $match_string );
+
+		$params['page']      = $match_array[1] ?? 'all';
+		$params['priority']  = $match_array[2] ?? '50';
+		$params['in_footer'] = ( 0 === stripos( $match_array[3], 'true' ) );
+
+		return $params;
+	}
+
+	/**
+	 * Extract the contents of the template block.
+	 *
+	 * @param string $block The template block.
+	 *
+	 * @return string
+	 */
+	public function extract_script( $block ): string {
+		preg_match_all( '/--}}(.+?){{--/ims', $block, $script );
+
+		return $script[1][0];
 	}
 
 	/**
 	 * Generate files in a temporary location.
 	 *
-	 * @param string $page   The page on which the script should load.
+	 * @param array  $block_params  Parameters for page slug, priority, and whether to load in the footer.
 	 * @param string $script The script to append the page's javascript file.
 	 */
-	public function generate_script( $page, $script ): void {
+	public function generate_script( $block_params, $script ): void {
 		// Append scripts to the appropriate page file, and generate a json config file for the enqueuer.
 		// This should take place in a temporary directory that gets switched out at the end, just in case something fails.
 	}
